@@ -383,7 +383,9 @@
                                       scaleOptions:self.scaleOptions
                               interpolationQuality:self.interpolationQuality];
 
-       } success:^(NSURLRequest *successfulRequest, NSHTTPURLResponse *response, UIImage *processedImage) {
+       }
+       cacheKey:pathToNetworkImage
+       success:^(NSURLRequest *successfulRequest, NSHTTPURLResponse *response, UIImage *processedImage) {
          [self _didFinishLoadingWithImage:processedImage
                           cacheIdentifier:pathToNetworkImage
                               displaySize:displaySize
