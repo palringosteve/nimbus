@@ -384,7 +384,6 @@
                               interpolationQuality:self.interpolationQuality];
 
        }
-       cacheName:pathToNetworkImage
        success:^(NSURLRequest *successfulRequest, NSHTTPURLResponse *response, UIImage *processedImage) {
          [self _didFinishLoadingWithImage:processedImage
                           cacheIdentifier:pathToNetworkImage
@@ -397,7 +396,7 @@
          [self _didFailToLoadWithError:error];
        }];
         
-      [operation setDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+      [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
           if ([self.delegate respondsToSelector:@selector(networkImageView:readBytes:totalBytes:)]) {
               [self.delegate networkImageView:self readBytes:totalBytesRead totalBytes:totalBytesExpectedToRead];
           }
