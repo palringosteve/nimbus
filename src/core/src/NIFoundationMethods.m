@@ -36,6 +36,12 @@ CGRect NIRectContract(CGRect rect, CGFloat dx, CGFloat dy) {
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+CGRect NIRectExpand(CGRect rect, CGFloat dx, CGFloat dy) {
+  return CGRectMake(rect.origin.x, rect.origin.y, rect.size.width + dx, rect.size.height + dy);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 CGRect NIRectShift(CGRect rect, CGFloat dx, CGFloat dy) {
   return CGRectOffset(NIRectContract(rect, dx, dy), dx, dy);
 }
@@ -49,6 +55,29 @@ CGRect NIFrameOfCenteredViewWithinView(UIView* viewToCenter, UIView* containerVi
   origin.x = floorf((containerViewSize.width - viewSize.width) / 2.f);
   origin.y = floorf((containerViewSize.height - viewSize.height) / 2.f);
   return CGRectMake(origin.x, origin.y, viewSize.width, viewSize.height);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+CGSize NISizeOfStringWithLabelProperties(NSString *string, CGSize constrainedToSize, UIFont *font, UILineBreakMode lineBreakMode, NSInteger numberOfLines) {
+  if (string.length == 0) {
+    return CGSizeZero;
+  }
+
+  CGFloat lineHeight = font.lineHeight;
+  CGSize size = CGSizeZero;
+
+  if (numberOfLines == 1) {
+    size = [string sizeWithFont:font forWidth:constrainedToSize.width lineBreakMode:lineBreakMode];
+
+  } else {
+    size = [string sizeWithFont:font constrainedToSize:constrainedToSize lineBreakMode:lineBreakMode];
+    if (numberOfLines > 0) {
+      size.height = MIN(size.height, numberOfLines * lineHeight);
+    }
+  }
+
+  return size;
 }
 
 

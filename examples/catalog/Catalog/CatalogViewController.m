@@ -64,6 +64,7 @@
 #import "NetworkBlockCellsViewController.h"
 #import "BlockCellsViewController.h"
 #import "SnapshotRotationTableViewController.h"
+#import "MutableTableModelViewController.h"
 
 // Web Controller
 #import "ExtraActionsWebViewController.h"
@@ -348,6 +349,11 @@
                              toObject:
       [NISubtitleCellObject objectWithTitle:@"Snapshot Rotation"
                                    subtitle:@"Rotating table views with snapshots"]],
+     [_actions attachNavigationAction:
+      NIPushControllerAction([MutableTableModelViewController class])
+                             toObject:
+      [NISubtitleCellObject objectWithTitle:@"Mutable Models"
+                                   subtitle:@"Mutating table view models"]],
      
      @"Web Controller",
      [_actions attachNavigationAction:

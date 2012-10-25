@@ -141,7 +141,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-  if ((self = [super initWithStyle:style reuseIdentifier:[reuseIdentifier stringByAppendingFormat:@"%d", style]])) {
+  if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
     self.selectionStyle = UITableViewCellSelectionStyleNone;
   }
   return self;
@@ -180,7 +180,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 @interface NIDrawRectBlockView : UIView
 @property (nonatomic, copy) NICellDrawRectBlock block;
-@property (nonatomic, retain) id object;
+@property (nonatomic, NI_STRONG) id object;
 @property (nonatomic, assign) UITableViewCell* cell;
 @end
 

@@ -28,6 +28,17 @@
 // UITextAlignmentJustify is deprecated in iOS 6.0. Please use NSTextAlignmentJustified instead.
 #endif
 
+/**
+ * Calculates the ideal dimensions of an attributed string fitting a given size.
+ *
+ * This calculation is performed off the raw attributed string so this calculation may differ
+ * slightly from NIAttributedLabel's use of it due to lack of link and image attributes.
+ *
+ * This method is used in NIAttributedLabel to calculate its size after all additional
+ * styling attributes have been set.
+ */
+CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString *attributedString, CGSize size, NSInteger numberOfLines);
+
 // Vertical alignments for NIAttributedLabel.
 typedef enum {
   NIVerticalTextAlignmentTop = 0,
@@ -42,10 +53,9 @@ typedef enum {
  *
  * Differences between UILabel and NIAttributedLabel:
  *
- * - @c UILineBreakModeHeadTruncation, @c UILineBreakModeTailTruncation, and
- *   @c UILineBreakModeMiddleTruncation only apply to single lines and will not wrap the label
- *   regardless of the @c numberOfLines property. To wrap lines with any of these line break modes
- *   you must explicitly add newline characters to the string.
+ * - @c UILineBreakModeHeadTruncation and @c UILineBreakModeMiddleTruncation only apply to single
+ *   lines and will not wrap the label regardless of the @c numberOfLines property. To wrap lines
+ *   with any of these line break modes you must explicitly add newline characters to the string.
  * - When you assign an NSString to the text property the attributed label will create an
  *   attributed string that inherits all of the label's current styles.
  * - Text is aligned vertically to the top of the bounds by default rather than centered. You can
@@ -73,18 +83,19 @@ typedef enum {
 - (void)addLink:(NSURL *)urlLink range:(NSRange)range;
 - (void)removeAllExplicitLinks; // Removes all links that were added by addLink:range:. Does not remove autodetected links.
 
-@property (nonatomic, strong) UIColor* linkColor; // Default: [UIColor blueColor]
-@property (nonatomic, strong) UIColor* highlightedLinkBackgroundColor; // Default: [UIColor colorWithWhite:0.5 alpha:0.5
+@property (nonatomic, NI_STRONG) UIColor* linkColor; // Default: [UIColor blueColor]
+@property (nonatomic, NI_STRONG) UIColor* highlightedLinkBackgroundColor; // Default: [UIColor colorWithWhite:0.5 alpha:0.5
 @property (nonatomic, assign) BOOL linksHaveUnderlines; // Default: NO
 @property (nonatomic, copy) NSDictionary *attributesForLinks; // Default: nil
 @property (nonatomic, copy) NSDictionary *attributesForHighlightedLink; // Default: nil
+@property (nonatomic, assign) CGFloat lineHeight;
 
 @property (nonatomic, assign) NIVerticalTextAlignment verticalTextAlignment; // Default: NIVerticalTextAlignmentTop
 @property (nonatomic, assign) CTUnderlineStyle underlineStyle;
 @property (nonatomic, assign) CTUnderlineStyleModifiers underlineStyleModifier;
 @property (nonatomic, assign) CGFloat shadowBlur; // Default: 0
 @property (nonatomic, assign) CGFloat strokeWidth;
-@property (nonatomic, strong) UIColor* strokeColor;
+@property (nonatomic, NI_STRONG) UIColor* strokeColor;
 @property (nonatomic, assign) CGFloat textKern;
 
 - (void)setTextColor:(UIColor *)textColor range:(NSRange)range;
@@ -98,7 +109,7 @@ typedef enum {
 - (void)insertImage:(UIImage *)image atIndex:(NSInteger)index margins:(UIEdgeInsets)margins;
 - (void)insertImage:(UIImage *)image atIndex:(NSInteger)index margins:(UIEdgeInsets)margins verticalTextAlignment:(NIVerticalTextAlignment)verticalTextAlignment;
 
-@property (nonatomic, assign) IBOutlet id<NIAttributedLabelDelegate> delegate;
+@property (nonatomic, NI_WEAK) IBOutlet id<NIAttributedLabelDelegate> delegate;
 @end
 
 /**
@@ -331,6 +342,16 @@ typedef enum {
  * By default this is nil.
  *
  *      @fn NIAttributedLabel::strokeColor
+ */
+
+/**
+ * Sets the line height for the text.
+ *
+ * By default this is zero.
+ *
+ * Setting this value to zero will make the label use the default line height for the text's font.
+ *
+ *      @fn NIAttributedLabel::lineHeight
  */
 
 /**

@@ -35,11 +35,11 @@
 
 @interface NITableViewActions()
 
-@property (nonatomic, assign) UIViewController* controller;
-@property (nonatomic, strong) NSMutableSet* forwardDelegates;
-@property (nonatomic, strong) NSMutableDictionary* objectMap;
-@property (nonatomic, strong) NSMutableSet* objectSet;
-@property (nonatomic, strong) NSMutableDictionary* classMap;
+@property (nonatomic, NI_WEAK) UIViewController* controller;
+@property (nonatomic, NI_STRONG) NSMutableSet* forwardDelegates;
+@property (nonatomic, NI_STRONG) NSMutableDictionary* objectMap;
+@property (nonatomic, NI_STRONG) NSMutableSet* objectSet;
+@property (nonatomic, NI_STRONG) NSMutableDictionary* classMap;
 
 @end
 
@@ -151,6 +151,20 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+- (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
+  NSMethodSignature *signature = [super methodSignatureForSelector:selector];
+  if (signature == nil) {
+    for (id delegate in self.forwardDelegates) {
+      if ([delegate respondsToSelector:selector]) {
+        signature = [delegate methodSignatureForSelector:selector];
+      }
+    }
+  }
+  return signature;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)forwardInvocation:(NSInvocation *)invocation {
   BOOL didForward = NO;
   
@@ -254,17 +268,14 @@
 
     if ([self isObjectActionable:object]) {
       NITableViewAction* action = [self actionForObjectOrClassOfObject:object];
-      UITableViewCellAccessoryType accessoryType = UITableViewCellAccessoryNone;
 
       // Detail disclosure indicator takes precedence over regular disclosure indicator.
       if (nil != action.detailAction) {
-        accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+        cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 
       } else if (nil != action.navigateAction) {
-        accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
       }
-
-      cell.accessoryType = accessoryType;
 
       // If the cell is tappable, reflect that in the selection style.
       if (action.navigateAction || action.tapAction) {
